@@ -110,6 +110,14 @@ Below are the results for each model, including key metrics such as **Accuracy**
 | Inference Time (Per Sample) | ~0.000009 sec |
 
 ---
+| Configuration | Accuracy | Parameters                                                                 |
+|---------------|----------|-----------------------------------------------------------------------------|
+| 1             | 0.9998   | `{'n_estimators': 10, 'max_depth': None, 'min_samples_split': 2}`          |
+| 2             | 0.9864   | `{'n_estimators': 50, 'max_depth': 10, 'min_samples_split': 5}`            |
+| 3             | 0.9998   | `{'n_estimators': 100, 'max_depth': 20, 'min_samples_split': 10}`          |
+| 4             | 0.9998   | `{'n_estimators': 200, 'max_depth': 30, 'min_samples_split': 20}`          |
+
+---
 
 ### Support Vector Machine (SVM)
 | Metric                  | Value             |

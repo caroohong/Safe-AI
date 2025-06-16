@@ -2,130 +2,102 @@
 
 ## Dataset
 The dataset used for this project is sourced from Kaggle:  
-[Credit Card Fraud Detection Dataset (2023)](https://www.kaggle.com/datasets/nelgiriyewithana/credit-card-fraud-detection-dataset-2023/data)
+[Credit Card Fraud]([https://www.kaggle.com/datasets/nelgiriyewithana/credit-card-fraud-detection-dataset-2023/data](https://www.kaggle.com/datasets/dhanushnarayananr/credit-card-fraud))
+- **Size**: 1,000,000 records
+- **Features**:
+  - `distance_from_home`: Distance from home where the transaction occurred.
+  - `distance_from_last_transaction`: Distance from the last transaction.
+  - `ratio_to_median_purchase_price`: Ratio of the purchase price to the median purchase price.
+  - `repeat_retailer`: Whether the transaction was made at a retailer where the user has shopped before.
+  - `used_chip`: Whether the transaction used a chip-based payment method.
+  - `used_pin_number`: Whether the transaction used a PIN number.
+  - `online_order`: Whether the transaction was an online order.
+  - `fraud`: Target variable indicating whether the transaction is fraudulent (`0` = Non-Fraud, `1` = Fraud).
+
+### Preprocessing
+- Checked for missing values (none found).
+- Balanced the dataset using SMOTE to address class imbalance (fraudulent vs. non-fraudulent transactions).
+- Split the dataset into training and testing sets (`80% train`, `20% test`) with stratification to preserve class distribution.
+
+## Training Recipes
+
+### Step 1: Data Preparation
+- Loaded the dataset.
+- Balanced the dataset using SMOTE to ensure equal representation of fraudulent and non-fraudulent transactions.
+
+### Step 2: Feature Engineering
+- Analyzed feature distributions and correlations using visualizations (e.g., histograms, boxplots, correlation heatmaps).
+- Identified key features contributing to fraud detection.
+
+### Step 3: Model Training
+- Trained machine learning models on the balanced dataset:
+  - Logistic Regression
+  - Random Forest Classifier
+- Evaluated models using metrics such as accuracy, precision, recall, F1-score, and ROC-AUC and selected the model with SOTA performance.
+
+### Step 4: Hyperparameter Tuning
+- Used default hyperparameters for initial training.
+
+### Step 5: Evaluation
+- Compared performance on both retain and forget sets after applying machine unlearning.
+
 
 ## Models Used
-The following machine learning models were trained and evaluated:
-- Logistic Regression
-- Random Forest
-- Support Vector Machine (SVM)
-
-## Model Performance
-
-Below are the results for each model, including key metrics such as **Accuracy**, **Precision**, **Recall**, **F1-Score**, **ROC-AUC**, and **Inference Time**.
-
----
 
 ### Logistic Regression
-| Metric                  | Value          |
-|-------------------------|----------------|
-| Accuracy                | 0.9649         |
-| Precision               | 0.9770         |
-| Recall                  | 0.9523         |
-| Inference Time (Total)  | 0.013712 sec   |
-| Inference Time (Per Sample) | ~0.000000 sec |
+- **Performance**:
+  - Accuracy: 93.60%
+  - Precision: 92.91%
+  - Recall: 94.41%
+  - F1-Score: 93.65%
+  - ROC-AUC: 93.60%
 
----
+### Random Forest 
+- **Performance**:
+  - Accuracy: 99.99%
+  - Precision: 99.98%
+  - Recall: 99.99%
+  - F1-Score: 99.99%
+  - ROC-AUC: 99.99%
 
-### Adam Optimizer Variations
+## Machine Unlearning
 
-#### Adam lr=0.001
-| Metric       | Value   |
-|--------------|---------|
-| Accuracy     | 0.9091  |
-| Precision    | 0.9879  |
-| Recall       | 0.8283  |
-| F1-Score     | 0.9011  |
-| ROC-AUC      | 0.9628  |
+### Approach
+- **Finetuning**:
+  - Retrained the model only on the retain set (`online_order = 0`).
+  - Achieved perfect performance on the retain set but degraded performance on the forget set.
+### Implementation
+- Split the dataset into:
+  - **Retain Set**: Transactions with `online_order = 0`.
+  - **Forget Set**: Transactions with `online_order = 1`.
+- Applied finetuning techniques to "unlearn" the influence of the `online_order` feature.
 
-#### Adam lr=0.01
-| Metric       | Value   |
-|--------------|---------|
-| Accuracy     | 0.9508  |
-| Precision    | 0.9849  |
-| Recall       | 0.9157  |
-| F1-Score     | 0.9491  |
-| ROC-AUC      | 0.9898  |
+## Results
 
-#### Adam with Weight Decay
-| Metric       | Value   |
-|--------------|---------|
-| Accuracy     | 0.8969  |
-| Precision    | 0.9954  |
-| Recall       | 0.7976  |
-| F1-Score     | 0.8856  |
-| ROC-AUC      | 0.9411  |
+### Original Model Performance
+- **Retain Set**:
+  - Accuracy: 99.99%
+  - Precision: 99.94%
+  - Recall: 100.00%
+  - F1-Score: 99.97%
+  - ROC-AUC: 99.99%
+- **Forget Set**:
+  - Accuracy: 99.99%
+  - Precision: 100.00%
+  - Recall: 99.99%
+  - F1-Score: 99.99%
+  - ROC-AUC: 99.99%
 
----
-
-### SGD Optimizer Variations
-
-#### SGD lr=0.001
-| Metric       | Value   |
-|--------------|---------|
-| Accuracy     | 0.9171  |
-| Precision    | 0.9979  |
-| Recall       | 0.8359  |
-| F1-Score     | 0.9097  |
-| ROC-AUC      | 0.9787  |
-
-#### SGD lr=0.01
-| Metric       | Value   |
-|--------------|---------|
-| Accuracy     | 0.9478  |
-| Precision    | 0.9884  |
-| Recall       | 0.9063  |
-| F1-Score     | 0.9456  |
-| ROC-AUC      | 0.9896  |
-
-#### SGD lr=0.05
-| Metric       | Value   |
-|--------------|---------|
-| Accuracy     | 0.9565  |
-| Precision    | 0.9830  |
-| Recall       | 0.9291  |
-| F1-Score     | 0.9553  |
-| ROC-AUC      | 0.9915  |
-
-#### SGD lr=0.1
-| Metric       | Value   |
-|--------------|---------|
-| Accuracy     | 0.9590  |
-| Precision    | 0.9829  |
-| Recall       | 0.9342  |
-| F1-Score     | 0.9579  |
-| ROC-AUC      | 0.9921  |
-
----
-
-### Random Forest
-| Metric                  | Value          |
-|-------------------------|----------------|
-| Accuracy                | 0.9998         |
-| Precision               | 0.9997         |
-| Recall                  | 1.0000         |
-| F1-Score                | 0.9998         |
-| ROC-AUC                 | 0.9998         |
-| Inference Time (Total)  | 1.034978 sec   |
-| Inference Time (Per Sample) | ~0.000009 sec |
-
----
-| Configuration | Accuracy | Parameters                                                                 |
-|---------------|----------|-----------------------------------------------------------------------------|
-| 1             | 0.9998   | `{'n_estimators': 10, 'max_depth': None, 'min_samples_split': 2}`          |
-| 2             | 0.9864   | `{'n_estimators': 50, 'max_depth': 10, 'min_samples_split': 5}`            |
-| 3             | 0.9998   | `{'n_estimators': 100, 'max_depth': 20, 'min_samples_split': 10}`          |
-| 4             | 0.9998   | `{'n_estimators': 200, 'max_depth': 30, 'min_samples_split': 20}`          |
-
----
-
-### Support Vector Machine (SVM)
-| Metric                  | Value             |
-|-------------------------|-------------------|
-| Accuracy                | 0.9971            |
-| Precision               | 0.9963            |
-| Recall                  | 0.9979            |
-| F1-Score                | 0.9971            |
-| ROC-AUC                 | 0.9971            |
-| Inference Time (Total)  | 104.024427 sec    |
-| Inference Time (Per Sample) | ~0.000915 sec |
+### After Machine Unlearning (Finetuning)
+- **Retain Set**:
+  - Accuracy: 100.00%
+  - Precision: 100.00%
+  - Recall: 100.00%
+  - F1-Score: 100.00%
+  - ROC-AUC: 100.00%
+- **Forget Set**:
+  - Accuracy: 46.05%
+  - Precision: 99.98%
+  - Recall: 10.55%
+  - F1-Score: 19.09%
+  - ROC-AUC: 55.27%
